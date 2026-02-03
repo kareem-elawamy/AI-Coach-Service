@@ -1,31 +1,44 @@
-const Analysis = require('../models/Analysis'); // استدعاء الموديل
-const aiService = require('../services/aiService');
+// src/controllers/analysisController.js
+const Analysis = require('../models/Analysis');
+const aiService = require('../Services/aiService'); // استدعاء خدمة الـ AI الجديدة
 const fileParser = require('../utils/fileParser');
 
 exports.analyzeFile = async (req, res) => {
     try {
-        // 1. استخراج النص
+        // التحقق من وجود الملف
+        if (!req.file) {
+            return res.status(400).json({ success: false, error: "من فضلك قم برفع ملف." });
+        }
+
+        // 1. استخراج النص من ملف الوورد
         const text = await fileParser.extractTextFromWord(req.file.buffer);
 
-        // 2. تحليل الـ AI
-        const aiAnalysis = await aiService.analyzeStudentData(text);
+        console.log("تم استخراج النص، جاري الإرسال للذكاء الاصطناعي...");
 
-        // 3. حفظ في MongoDB
+        // 2. تحليل البيانات باستخدام Gemini
+        // هذه الخطوة هي التي ستحول النص "المعجن" إلى JSON منظم
+        const aiAnalysisResult = await aiService.analyzeStudentData(text);
+
+        // 3. حفظ البيانات (النص الأصلي + التحليل المنظم) في قاعدة البيانات
         const newAnalysis = new Analysis({
             fileName: req.file.originalname,
-            originalText: text,
-            aiResult: aiAnalysis
+            rawExtractedText: text,      // النص الخام (للمرجعية)
+            aiAnalysis: aiAnalysisResult, // الـ JSON المنظم (للعرض)
+            status: 'completed'
         });
 
         const savedData = await newAnalysis.save();
 
-        // 4. الرد على العميل
+        // 4. الرد على العميل بالبيانات المحللة
         res.status(200).json({
             success: true,
-            id: savedData._id, // هتحتاج الـ ID ده عشان الـ Next.js يعرض الصفحة لاحقاً
-            data: savedData.aiResult
+            message: "تم تحليل الملف بنجاح",
+            id: savedData._id,
+            data: savedData.aiAnalysis // نرجع الـ JSON ليظهر في الفرونت إند
         });
+
     } catch (error) {
+        console.error("Controller Error:", error);
         res.status(500).json({ success: false, error: error.message });
     }
 };
