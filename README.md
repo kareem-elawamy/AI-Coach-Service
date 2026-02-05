@@ -4,7 +4,7 @@
 ![Next.js](https://img.shields.io/badge/Next.js-15-black?style=for-the-badge&logo=next.js)
 ![Node.js](https://img.shields.io/badge/Node.js-v24-green?style=for-the-badge&logo=node.js)
 ![TypeScript](https://img.shields.io/badge/TypeScript-5.0-blue?style=for-the-badge&logo=typescript)
-![Gemini AI](https://img.shields.io/badge/Gemini_AI-1.5_Flash-orange?style=for-the-badge&logo=google-gemini)
+![Gemini AI](https://img.shields.io/badge/Gemini_AI-2.5_Flash-orange?style=for-the-badge&logo=google-gemini)
 
 نظام متكامل (Full-Stack) يهدف إلى أتمتة عملية تحليل التقارير الورقية للاعبين. يقوم النظام بتحويل ملفات Word الصعبة إلى تقارير تفاعلية منظمة تحتوي على توصيات غذائية وصحية مدعومة بالذكاء الاصطناعي.
 
@@ -58,4 +58,5 @@ npm run dev
 يتم إرسال النص إلى Gemini AI مع Prompt هندسي مخصص لإخراج JSON منظم.
 
 يستقبل الـ Frontend الـ JSON ويقوم برسم الكروت التفاعلية.
+
 
